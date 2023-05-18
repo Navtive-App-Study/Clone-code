@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import * as Location from 'expo-location'
 import {  View ,StyleSheet, Text , ScrollView, Dimensions} from 'react-native';
 const { height, width: SCREEN_WIDTH } = Dimensions.get('window')
-const API_KEY = "c06c9380e301b89b4ded2081a7af6cd1"
 
 
 export default function App() {
@@ -17,8 +16,7 @@ export default function App() {
     const {coords: {latitude, longitude}} = await Location.getCurrentPositionAsync({accuracy: 5})
     const location = await Location.reverseGeocodeAsync({latitude, longitude}, {useGoogleMaps: false})
     setCity(location[0].district)
-    const res =  (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`))
-    console.log(res, ' 리스폰 리스폰')
+
   }
 
 
