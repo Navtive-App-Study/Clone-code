@@ -26,27 +26,35 @@ export default function App() {
 		loadToDos();
 		getCategory();
 	}, []);
+
 	const changeCategory = () => {
 		setWorking((prev) => !prev);
 		saveCategory();
 	};
+
 	const onChangeText = (payload) => setText(payload);
+
 	const saveToDos = async (toSave) => {
+		console.log("toSave", toSave);
 		await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
 	};
+
 	const loadToDos = async () => {
 		const s = await AsyncStorage.getItem(STORAGE_KEY);
 		if (s) {
 			setToDos(JSON.parse(s));
 		}
 	};
+
 	const saveCategory = async () => {
 		await AsyncStorage.setItem(CATEGORY_KEY, JSON.stringify(working));
 	};
+
 	const getCategory = async () => {
 		const prevCategory = await AsyncStorage.getItem(CATEGORY_KEY);
 		setWorking(JSON.parse(prevCategory));
 	};
+
 	const addTodo = async () => {
 		if (text === "") {
 			return;
@@ -118,10 +126,26 @@ export default function App() {
 			<StatusBar style="auto" />
 			<View style={styles.header}>
 				<TouchableOpacity onPress={changeCategory}>
-					<Text style={styles.workBtnText}>Work</Text>
+					<Text
+						style={{
+							fontSize: 38,
+							fontWeight: "600",
+							color: working ? "white" : theme.grey,
+						}}
+					>
+						Work
+					</Text>
 				</TouchableOpacity>
 				<TouchableOpacity onPress={changeCategory}>
-					<Text style={styles.travelBtnText}>Travel</Text>
+					<Text
+						style={{
+							fontSize: 38,
+							fontWeight: "600",
+							color: working ? "white" : theme.grey,
+						}}
+					>
+						Travel
+					</Text>
 				</TouchableOpacity>
 			</View>
 			<View>
@@ -201,16 +225,6 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		flexDirection: "row",
 		marginTop: 100,
-	},
-	workBtnText: {
-		fontSize: 38,
-		fontWeight: "600",
-		color: working ? "white" : theme.grey,
-	},
-	travelBtnText: {
-		fontSize: 38,
-		fontWeight: "600",
-		color: working ? "white" : theme.grey,
 	},
 	input: {
 		backgroundColor: "white",
