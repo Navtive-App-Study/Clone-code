@@ -6,26 +6,49 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
-  const STORAGE_KEY = '@todo'
+  const TODO_KEY = '@todo'
+  const CATEGORY_KEY = 'category'
 
-  const [working, setWorking] = useState(true)
+  const [working, setWorking] = useState(AsyncStorage.getItem(CATEGORY_KEY))
   const [text, setText] = useState('')
   const [todo, setTodo] = useState({})
 
-  const travel = () => setWorking(false);
-  const work = () => setWorking(true)
+  const travel = async () => {
+    
+    try{
+      setWorking( await AsyncStorage.setItem(CATEGORY_KEY, JSON.stringify({'category': 'travel'})))
+    }catch(err){
+      console.log(err)
+    }
+  };
+
+  const work = async () => {
+    // setWorking(true)
+    try{
+      setWorking( await AsyncStorage.setItem(CATEGORY_KEY, JSON.stringify({'category': 'work'})))
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    
+    console.log(working)
+
+  },[work, travel, working])
+
   const onTextChange = (e) => setText(e)
 
   const saveTodo = async (toSave) => {
     try{
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave))
+      await AsyncStorage.setItem(TODO_KEY, JSON.stringify(toSave))
     }catch(err){
       console.log(err)
     }
   }
 
   const loadTodo = async () => {
-    const str = await AsyncStorage.getItem(STORAGE_KEY) 
+    const str = await AsyncStorage.getItem(TODO_KEY) 
     const obj = JSON.parse(str)
     setTodo(obj)
   }
@@ -42,7 +65,6 @@ export default function App() {
         saveTodo(newTodo)
       }
     }
-  
   ])
     return
   }
@@ -68,11 +90,13 @@ export default function App() {
     <View style={styles.header}>
 
       <TouchableOpacity activeOpacity={0.5} onPress={work}>
-        <Text style={{...styles.btnText, color: working ? "white" : theme.grey}}>Work</Text>
+        <Text style={{...styles.btnText, color: working === 'work' ? "white" : theme.grey}}>Work</Text>
       </TouchableOpacity>
 
-      <TouchableHighlight onPress={travel} underlayColor={'coral'} activeOpacity={0.5}>
-        <Text style={{...styles.btnText, color: working ?  theme.grey : "white"}}>Travel</Text>
+      <TouchableHighlight onPress={travel} 
+      // underlayColor={'coral'}
+       activeOpacity={0.5}>
+        <Text style={{...styles.btnText, color: working === 'travel' ?  theme.grey : "white"}}>Travel</Text>
       </TouchableHighlight>
 
   
